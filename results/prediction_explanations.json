@@ -1,0 +1,152 @@
+[
+  {
+    "prediction_metadata": {
+      "observation_timestamp": "2026-04-28 00:00:00",
+      "target_horizon_timestamp": "2026-04-28 06:00:00",
+      "port_id": "PORT_A",
+      "predicted_delay_probability": 0.71,
+      "threshold_applied": 0.4,
+      "predicted_classification": "DELAYED (Predicted Delay)",
+      "ground_truth_target": 1
+    },
+    "global_feature_importance_and_observed_context": [
+      {
+        "feature": "queue_length",
+        "global_importance_weight": 0.2423,
+        "observed_value_context": 0,
+        "training_mean_baseline": 1.04
+      },
+      {
+        "feature": "historical_avg_delay_hours",
+        "global_importance_weight": 0.2064,
+        "observed_value_context": 5.26,
+        "training_mean_baseline": 6.43
+      },
+      {
+        "feature": "arrival_load_ratio",
+        "global_importance_weight": 0.1603,
+        "observed_value_context": 1.25,
+        "training_mean_baseline": 0.74
+      },
+      {
+        "feature": "vessel_arrivals_6h",
+        "global_importance_weight": 0.0792,
+        "observed_value_context": 15,
+        "training_mean_baseline": 8.96
+      },
+      {
+        "feature": "effective_capacity_6h",
+        "global_importance_weight": 0.0773,
+        "observed_value_context": 11,
+        "training_mean_baseline": 11.52
+      }
+    ],
+    "case_observation_narrative": "For port PORT_A, the model estimates a 71.0% probability of delay in the upcoming 6-hour horizon (2026-04-28 06:00:00). Classification is DELAYED (Predicted Delay) at threshold 0.40. Observed operational context: queue backlog (0 vessels) is at or below baseline (1.04 vessels); arrival load ratio (1.25) indicates incoming vessels exceed nominal capacity; weather condition (Rain) reduces effective operating capacity.",
+    "methodology_and_limitations": {
+      "observed_values_as_context": "Observed feature values provide operational background describing current conditions. They are situational context, not mathematically certified local feature contributions or SHAP values.",
+      "global_vs_case_distinction": "Feature importances represent the model's global sensitivity across all 100 decision trees in the training dataset. They do not calculate exact mathematical contribution points for this single prediction.",
+      "uncalibrated_probability_disclaimer": "The predicted delay probability represents the raw proportion of ensemble trees voting for a delay. It is uncalibrated and should not be interpreted as a validated real-world operational probability.",
+      "non_causal_disclaimer": "Observed factors reflect statistical associations in synthetic simulation history. The model does NOT establish that these factors caused the predicted outcome."
+    }
+  },
+  {
+    "prediction_metadata": {
+      "observation_timestamp": "2026-04-10 18:00:00",
+      "target_horizon_timestamp": "2026-04-11 00:00:00",
+      "port_id": "PORT_A",
+      "predicted_delay_probability": 0.1362,
+      "threshold_applied": 0.4,
+      "predicted_classification": "ON-TIME (Normal)",
+      "ground_truth_target": 0
+    },
+    "global_feature_importance_and_observed_context": [
+      {
+        "feature": "queue_length",
+        "global_importance_weight": 0.2423,
+        "observed_value_context": 0,
+        "training_mean_baseline": 1.04
+      },
+      {
+        "feature": "historical_avg_delay_hours",
+        "global_importance_weight": 0.2064,
+        "observed_value_context": 4.37,
+        "training_mean_baseline": 6.43
+      },
+      {
+        "feature": "arrival_load_ratio",
+        "global_importance_weight": 0.1603,
+        "observed_value_context": 0.75,
+        "training_mean_baseline": 0.74
+      },
+      {
+        "feature": "vessel_arrivals_6h",
+        "global_importance_weight": 0.0792,
+        "observed_value_context": 9,
+        "training_mean_baseline": 8.96
+      },
+      {
+        "feature": "effective_capacity_6h",
+        "global_importance_weight": 0.0773,
+        "observed_value_context": 12,
+        "training_mean_baseline": 11.52
+      }
+    ],
+    "case_observation_narrative": "For port PORT_A, the model estimates a 13.6% probability of delay in the upcoming 6-hour horizon (2026-04-11 00:00:00). Classification is ON-TIME (Normal) at threshold 0.40. Observed operational context: queue backlog (0 vessels) is at or below baseline (1.04 vessels); arrival load ratio (0.75) is moderately high.",
+    "methodology_and_limitations": {
+      "observed_values_as_context": "Observed feature values provide operational background describing current conditions. They are situational context, not mathematically certified local feature contributions or SHAP values.",
+      "global_vs_case_distinction": "Feature importances represent the model's global sensitivity across all 100 decision trees in the training dataset. They do not calculate exact mathematical contribution points for this single prediction.",
+      "uncalibrated_probability_disclaimer": "The predicted delay probability represents the raw proportion of ensemble trees voting for a delay. It is uncalibrated and should not be interpreted as a validated real-world operational probability.",
+      "non_causal_disclaimer": "Observed factors reflect statistical associations in synthetic simulation history. The model does NOT establish that these factors caused the predicted outcome."
+    }
+  },
+  {
+    "prediction_metadata": {
+      "observation_timestamp": "2026-05-03 06:00:00",
+      "target_horizon_timestamp": "2026-05-03 12:00:00",
+      "port_id": "PORT_A",
+      "predicted_delay_probability": 0.4443,
+      "threshold_applied": 0.4,
+      "predicted_classification": "DELAYED (Predicted Delay)",
+      "ground_truth_target": 0
+    },
+    "global_feature_importance_and_observed_context": [
+      {
+        "feature": "queue_length",
+        "global_importance_weight": 0.2423,
+        "observed_value_context": 8,
+        "training_mean_baseline": 1.04
+      },
+      {
+        "feature": "historical_avg_delay_hours",
+        "global_importance_weight": 0.2064,
+        "observed_value_context": 8.57,
+        "training_mean_baseline": 6.43
+      },
+      {
+        "feature": "arrival_load_ratio",
+        "global_importance_weight": 0.1603,
+        "observed_value_context": 0.417,
+        "training_mean_baseline": 0.74
+      },
+      {
+        "feature": "vessel_arrivals_6h",
+        "global_importance_weight": 0.0792,
+        "observed_value_context": 5,
+        "training_mean_baseline": 8.96
+      },
+      {
+        "feature": "effective_capacity_6h",
+        "global_importance_weight": 0.0773,
+        "observed_value_context": 12,
+        "training_mean_baseline": 11.52
+      }
+    ],
+    "case_observation_narrative": "For port PORT_A, the model estimates a 44.4% probability of delay in the upcoming 6-hour horizon (2026-05-03 12:00:00). Classification is DELAYED (Predicted Delay) at threshold 0.40. Observed operational context: queue backlog (8 vessels) is above typical training average (1.04 vessels); recent historical delay average (8.57h) is elevated relative to average (6.43h).",
+    "methodology_and_limitations": {
+      "observed_values_as_context": "Observed feature values provide operational background describing current conditions. They are situational context, not mathematically certified local feature contributions or SHAP values.",
+      "global_vs_case_distinction": "Feature importances represent the model's global sensitivity across all 100 decision trees in the training dataset. They do not calculate exact mathematical contribution points for this single prediction.",
+      "uncalibrated_probability_disclaimer": "The predicted delay probability represents the raw proportion of ensemble trees voting for a delay. It is uncalibrated and should not be interpreted as a validated real-world operational probability.",
+      "non_causal_disclaimer": "Observed factors reflect statistical associations in synthetic simulation history. The model does NOT establish that these factors caused the predicted outcome."
+    }
+  }
+]

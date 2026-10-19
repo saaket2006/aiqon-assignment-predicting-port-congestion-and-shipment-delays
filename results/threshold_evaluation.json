@@ -1,0 +1,129 @@
+{
+  "threshold_summary": {
+    "operational_higher_recall_threshold": 0.4,
+    "default_baseline_threshold": 0.5,
+    "validation_f1_maximizing_threshold": 0.55,
+    "selection_rationale": "Validation analysis reveals distinct operational trade-offs across candidate thresholds:\n1. Validation F1-Maximizing Threshold (0.55): Maximizes harmonic balance between precision (60.00%) and recall (53.85%) on validation data with F1 = 0.5676. However, it misses 18 of 39 delays (46.15% false negative rate) on validation.\n2. Default Model Threshold (0.50): Standard unadjusted threshold producing F1 = 0.5393, recall = 61.54%, and precision = 48.00% on validation.\n3. Operational Higher-Recall Threshold (0.40): In maritime port logistics, the cost of an unexpected delay (berth bottlenecks, vessel idling, demurrage) is substantially higher than an unneeded check or alert (false alarm). Threshold 0.40 is selected as the primary operational choice because it achieves >70% recall on validation (71.79%, catching 28 of 39 delays) while maintaining a competitive F1-score of 0.4956."
+  },
+  "validation_performance": {
+    "total_samples": 250,
+    "delayed_samples": 39,
+    "threshold_0_40_operational": {
+      "threshold": 0.4,
+      "precision": 0.3784,
+      "recall": 0.7179,
+      "f1": 0.4956,
+      "accuracy": 0.772,
+      "predicted_delays": 74,
+      "confusion_matrix": "[[165, 46], [11, 28]]"
+    },
+    "threshold_0_50_default": {
+      "threshold": 0.5,
+      "precision": 0.48,
+      "recall": 0.6154,
+      "f1": 0.5393,
+      "accuracy": 0.836,
+      "predicted_delays": 50,
+      "confusion_matrix": "[[185, 26], [15, 24]]"
+    },
+    "threshold_0_55_f1_max": {
+      "threshold": 0.55,
+      "precision": 0.6,
+      "recall": 0.5385,
+      "f1": 0.5676,
+      "accuracy": 0.872,
+      "predicted_delays": 35,
+      "confusion_matrix": "[[197, 14], [18, 21]]"
+    }
+  },
+  "test_evaluation": {
+    "operational_threshold_0_40": {
+      "setting_name": "operational_higher_recall_0_40",
+      "threshold": 0.4,
+      "samples": 500,
+      "predicted_delays": 119,
+      "accuracy": 0.78,
+      "precision": 0.2605,
+      "recall": 0.5849,
+      "f1": 0.3605,
+      "roc_auc": 0.7356,
+      "confusion_matrix": [
+        [
+          359,
+          88
+        ],
+        [
+          22,
+          31
+        ]
+      ],
+      "delays_caught": "31 / 53"
+    },
+    "default_threshold_0_50": {
+      "setting_name": "default_0_50",
+      "threshold": 0.5,
+      "samples": 500,
+      "predicted_delays": 64,
+      "accuracy": 0.858,
+      "precision": 0.3594,
+      "recall": 0.434,
+      "f1": 0.3932,
+      "roc_auc": 0.7356,
+      "confusion_matrix": [
+        [
+          406,
+          41
+        ],
+        [
+          30,
+          23
+        ]
+      ],
+      "delays_caught": "23 / 53"
+    },
+    "f1_maximizing_threshold_0_55": {
+      "setting_name": "validation_f1_maximizing_0_55",
+      "threshold": 0.55,
+      "samples": 500,
+      "predicted_delays": 37,
+      "accuracy": 0.876,
+      "precision": 0.3784,
+      "recall": 0.2642,
+      "f1": 0.3111,
+      "roc_auc": 0.7356,
+      "confusion_matrix": [
+        [
+          424,
+          23
+        ],
+        [
+          39,
+          14
+        ]
+      ],
+      "delays_caught": "14 / 53"
+    },
+    "dummy_baseline": {
+      "setting_name": "dummy_baseline_most_frequent",
+      "threshold": null,
+      "samples": 500,
+      "predicted_delays": 0,
+      "accuracy": 0.894,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "roc_auc": 0.5,
+      "confusion_matrix": [
+        [
+          447,
+          0
+        ],
+        [
+          53,
+          0
+        ]
+      ],
+      "delays_caught": "0 / 53"
+    }
+  }
+}

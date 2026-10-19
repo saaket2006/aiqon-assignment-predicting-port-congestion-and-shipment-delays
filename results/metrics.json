@@ -1,0 +1,155 @@
+{
+  "dataset": {
+    "source": "port_congestion_forecasting_dataset.csv",
+    "total_rows": 2495,
+    "splits": {
+      "train": {
+        "samples": 1745,
+        "observation_date_range": [
+          "2026-01-01 00:00:00",
+          "2026-03-29 00:00:00"
+        ],
+        "target_date_range": [
+          "2026-01-01 06:00:00",
+          "2026-03-29 06:00:00"
+        ],
+        "target_counts": {
+          "on_time_0": 1541,
+          "delayed_1": 204
+        }
+      },
+      "validation": {
+        "samples": 250,
+        "observation_date_range": [
+          "2026-03-29 06:00:00",
+          "2026-04-10 12:00:00"
+        ],
+        "target_date_range": [
+          "2026-03-29 12:00:00",
+          "2026-04-10 18:00:00"
+        ],
+        "target_counts": {
+          "on_time_0": 211,
+          "delayed_1": 39
+        }
+      },
+      "test": {
+        "samples": 500,
+        "observation_date_range": [
+          "2026-04-10 18:00:00",
+          "2026-05-05 12:00:00"
+        ],
+        "target_date_range": [
+          "2026-04-11 00:00:00",
+          "2026-05-05 18:00:00"
+        ],
+        "target_counts": {
+          "on_time_0": 447,
+          "delayed_1": 53
+        }
+      }
+    }
+  },
+  "features": {
+    "numeric": [
+      "vessel_arrivals_6h",
+      "port_capacity_6h",
+      "arrival_load_ratio",
+      "queue_length",
+      "effective_capacity_6h",
+      "historical_avg_delay_hours"
+    ],
+    "categorical": [
+      "port_id",
+      "weather_condition",
+      "day_of_week"
+    ],
+    "target": "target_delayed_next_6h"
+  },
+  "models": {
+    "dummy_baseline": {
+      "strategy": "most_frequent",
+      "validation_metrics": {
+        "samples": 250,
+        "accuracy": 0.844,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "confusion_matrix": [
+          [
+            211,
+            0
+          ],
+          [
+            39,
+            0
+          ]
+        ],
+        "roc_auc": 0.5
+      },
+      "test_metrics": {
+        "samples": 500,
+        "accuracy": 0.894,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "confusion_matrix": [
+          [
+            447,
+            0
+          ],
+          [
+            53,
+            0
+          ]
+        ],
+        "roc_auc": 0.5
+      }
+    },
+    "random_forest": {
+      "hyperparameters": {
+        "n_estimators": 100,
+        "max_depth": 6,
+        "min_samples_leaf": 2,
+        "random_state": 42,
+        "class_weight": "balanced"
+      },
+      "validation_metrics": {
+        "samples": 250,
+        "accuracy": 0.836,
+        "precision": 0.48,
+        "recall": 0.6154,
+        "f1": 0.5393,
+        "confusion_matrix": [
+          [
+            185,
+            26
+          ],
+          [
+            15,
+            24
+          ]
+        ],
+        "roc_auc": 0.8227
+      },
+      "test_metrics": {
+        "samples": 500,
+        "accuracy": 0.858,
+        "precision": 0.3594,
+        "recall": 0.434,
+        "f1": 0.3932,
+        "confusion_matrix": [
+          [
+            406,
+            41
+          ],
+          [
+            30,
+            23
+          ]
+        ],
+        "roc_auc": 0.7356
+      }
+    }
+  }
+}
