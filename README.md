@@ -124,6 +124,22 @@ streamlit run app.py
 ```
 The application will open in your browser at `http://localhost:8501`.
 
+### 4. Running the Automated Test Suite
+Execute all 17 automated regression and unit tests:
+```bash
+pytest -v
+```
+
+### 5. Compiling the Technical PDF Report
+Compile the official 3-page executive technical report:
+```bash
+python reports/generate_pdf_report.py
+```
+The resulting PDF is saved to `reports/technical_report.pdf`.
+
+### 6. Five-Minute Demonstration Walkthrough
+Refer to [`docs/demo_plan.md`](docs/demo_plan.md) for a structured 5-minute presentation guide covering live dashboard interactions and scenario testing.
+
 ---
 
 ## 7. Project Structure
@@ -139,6 +155,7 @@ The application will open in your browser at `http://localhost:8501`.
 │   ├── port_congestion_forecasting_dataset.csv   # Prepared forecasting dataset (2,495 rows)
 │   └── port_congestion_validation_report.md      # Data profile and validation summary
 ├── docs/
+│   ├── demo_plan.md                              # Five-minute interview / demonstration guide
 │   ├── problem_definition_and_scope.md           # Problem framing and boundary conditions
 │   ├── product_requirements_document.md          # User stories, operating threshold needs
 │   ├── software_requirements_specification.md     # Pipeline functional & non-functional requirements
@@ -146,6 +163,9 @@ The application will open in your browser at `http://localhost:8501`.
 │   └── implementation_and_test_plan.md           # Verification and validation protocols
 ├── models/
 │   └── random_forest_pipeline.joblib             # Serialized preprocessor + Random Forest model
+├── reports/
+│   ├── generate_pdf_report.py                    # ReportLab script generating executive PDF report
+│   └── technical_report.pdf                      # Official 3-page technical PDF report
 ├── results/
 │   ├── metrics.json                              # Machine-readable validation and test metrics
 │   ├── test_predictions.csv                      # Test predictions, probabilities, and targets
@@ -153,11 +173,14 @@ The application will open in your browser at `http://localhost:8501`.
 │   ├── threshold_comparison.csv                  # Validation performance across candidate thresholds
 │   ├── threshold_evaluation.json                 # Comparative evaluation of threshold policies
 │   └── prediction_explanations.json              # Situational contextual summaries for test cases
-└── src/
-    ├── prepare_data.py                           # Target alignment and data sanitation
-    ├── train.py                                  # Chronological partitioning and model training
-    ├── evaluate_thresholds.py                    # Decision threshold tuning and policy evaluation
-    └── explain.py                                # Situational context and explanation generator
+├── src/
+│   ├── prepare_data.py                           # Target alignment and data sanitation
+│   ├── train.py                                  # Chronological partitioning and model training
+│   ├── evaluate_thresholds.py                    # Decision threshold tuning and policy evaluation
+│   └── explain.py                                # Situational context and explanation generator
+└── tests/
+    ├── conftest.py                               # Pytest project configuration
+    └── test_pipeline.py                          # 17 automated regression and unit tests
 ```
 
 ---

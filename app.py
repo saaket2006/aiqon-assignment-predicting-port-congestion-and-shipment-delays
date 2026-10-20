@@ -10,6 +10,7 @@ Run with:
     streamlit run app.py
 """
 
+from datetime import datetime, time, timedelta
 from pathlib import Path
 import json
 import joblib
@@ -115,7 +116,7 @@ scenario = st.sidebar.radio(
 # Default values based on scenario
 if scenario == "Normal Operations":
     default_port = "PORT_A"
-    default_day = "Tuesday"
+    default_date = pd.to_datetime("2026-04-21").date()  # Tuesday
     default_weather = "Clear"
     default_arrivals = 7
     default_port_cap = 12
@@ -124,7 +125,7 @@ if scenario == "Normal Operations":
     default_hist_delay = 4.2
 elif scenario == "Elevated Delay Risk":
     default_port = "PORT_E"
-    default_day = "Saturday"
+    default_date = pd.to_datetime("2026-04-25").date()  # Saturday
     default_weather = "Storm"
     default_arrivals = 12
     default_port_cap = 9
@@ -133,7 +134,7 @@ elif scenario == "Elevated Delay Risk":
     default_hist_delay = 8.5
 elif scenario == "Borderline Case":
     default_port = "PORT_B"
-    default_day = "Friday"
+    default_date = pd.to_datetime("2026-04-24").date()  # Friday
     default_weather = "Rain"
     default_arrivals = 9
     default_port_cap = 10
@@ -142,7 +143,7 @@ elif scenario == "Borderline Case":
     default_hist_delay = 6.2
 else:
     default_port = "PORT_A"
-    default_day = "Monday"
+    default_date = pd.to_datetime("2026-05-01").date()  # Friday
     default_weather = "Clear"
     default_arrivals = 9
     default_port_cap = 12
@@ -176,23 +177,32 @@ st.subheader("1. Enter Current Six-Hour Observation")
 
 col_time1, col_time2, col_time3 = st.columns(3)
 with col_time1:
-    obs_date = st.date_input("Observation Date:", value=pd.to_datetime("2026-05-01"))
+    obs_date = st.date_input("Observation Date:", value=default_date)
+    day_of_week = obs_date.strftime("%A")
+
 with col_time2:
     obs_interval = st.selectbox(
         "Observation Time Window (Current):",
         ["00:00 to 06:00", "06:00 to 12:00", "12:00 to 18:00", "18:00 to 24:00"],
         index=1,
     )
+
 with col_time3:
-    # Compute forecast cutoff and target horizon
-    slot_hours = {
-        "00:00 to 06:00": ("06:00", "06:00 to 12:00"),
-        "06:00 to 12:00": ("12:00", "12:00 to 18:00"),
-        "12:00 to 18:00": ("18:00", "18:00 to 24:00"),
-        "18:00 to 24:00": ("00:00 (next day)", "00:00 to 06:00 (next day)"),
+    # Compute forecast cutoff and target horizon using exact date-time arithmetic
+    slot_start_hours = {
+        "00:00 to 06:00": 0,
+        "06:00 to 12:00": 6,
+        "12:00 to 18:00": 12,
+        "18:00 to 24:00": 18,
     }
-    cutoff_str, target_horizon_str = slot_hours[obs_interval]
-    st.info(f"**Forecast Cutoff:** `{obs_date} {cutoff_str}`\n\n**Predicted Horizon:** `{target_horizon_str}`")
+    start_hour = slot_start_hours[obs_interval]
+    obs_start_dt = datetime.combine(obs_date, time(hour=start_hour))
+    cutoff_dt = obs_start_dt + timedelta(hours=6)
+    horizon_end_dt = cutoff_dt + timedelta(hours=6)
+
+    cutoff_str = cutoff_dt.strftime("%Y-%m-%d %H:%M")
+    target_horizon_str = f"{cutoff_dt.strftime('%Y-%m-%d %H:%M')} to {horizon_end_dt.strftime('%Y-%m-%d %H:%M')}"
+    st.info(f"**Forecast Cutoff:** `{cutoff_str}`\n\n**Predicted Horizon:** `{target_horizon_str}`")
 
 col1, col2 = st.columns(2)
 
@@ -203,10 +213,11 @@ with col1:
         ["PORT_A", "PORT_B", "PORT_C", "PORT_D", "PORT_E"],
         index=["PORT_A", "PORT_B", "PORT_C", "PORT_D", "PORT_E"].index(default_port),
     )
-    day_of_week = st.selectbox(
+    st.text_input(
         "Day of Week (`day_of_week`):",
-        ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-        index=["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].index(default_day),
+        value=day_of_week,
+        disabled=True,
+        help="Automatically derived from the selected Observation Date above to maintain internal consistency.",
     )
     weather_condition = st.selectbox(
         "Weather Condition (`weather_condition`):",
@@ -241,6 +252,9 @@ with col2:
         step=1,
         help="Weather-adjusted operating capacity available during the interval.",
     )
+    if effective_capacity_6h > port_capacity_6h and port_capacity_6h > 0:
+        st.caption(f"⚠️ Note: Effective Capacity ({effective_capacity_6h}) exceeds Nominal Capacity ({port_capacity_6h}). In standard operations, weather reductions usually keep effective capacity $\\le$ nominal capacity.")
+
     queue_length = st.number_input(
         "Queue Backlog at Start of Window (`queue_length`):",
         min_value=0,
@@ -317,7 +331,7 @@ if predict_clicked and is_valid_capacity:
 
     with res_col2:
         if is_delayed:
-            st.error(f"🚨 **DELAY PREDICTED (Class 1)**\n\nProbability ({predicted_prob:.1%}) $\ge$ Threshold ({threshold:.2f})")
+            st.error(f"🚨 **DELAY PREDICTED (Class 1)**\n\nProbability ({predicted_prob:.1%}) $\\ge$ Threshold ({threshold:.2f})")
         else:
             st.success(f"✅ **ON-TIME PREDICTED (Class 0)**\n\nProbability ({predicted_prob:.1%}) < Threshold ({threshold:.2f})")
 

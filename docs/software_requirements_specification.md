@@ -1,7 +1,7 @@
 # Software Requirements Specification (SRS)
 ## Port Congestion and Shipping Delay Forecasting
 
-**Status:** Proposed requirements baseline  
+**Status:** Implemented and verified baseline  
 **System type:** Local Python ML prototype
 
 ## 1. Purpose

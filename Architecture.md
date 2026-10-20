@@ -50,6 +50,8 @@ This system implements an interpretable machine learning pipeline to forecast si
   - `threshold_comparison.csv`: Validation performance across candidate classification thresholds.
   - `threshold_evaluation.json`: Comparative held-out test metrics under chosen threshold vs default and baseline.
   - `prediction_explanations.json`: Formatted prediction explanations for representative operational cases.
+- **Reports Store (`reports/`)**:
+  - `technical_report.pdf`: Official 3-page publication-grade PDF technical report detailing system architecture, temporal methodology, empirical benchmarks, and operational governance.
 
 ### 3. Data Flow
 
@@ -77,9 +79,11 @@ flowchart TD
 
 ### 4. Major Dependencies & Execution Boundaries
 
-- **Core Runtime**: Python 3.11+, `pandas`, `numpy`, `scikit-learn`, `joblib`, `streamlit`.
+- **Core Runtime**: Python 3.11+, `pandas`, `numpy`, `scikit-learn`, `joblib`, `streamlit`, `pytest`, `reportlab`.
 - **Execution Boundary**:
-  - Batch command-line scripts (`python src/prepare_data.py`, `python src/train.py`, `python src/evaluate_thresholds.py`, `python src/explain.py`).
+  - Batch data and modeling scripts (`python src/prepare_data.py`, `python src/train.py`, `python src/evaluate_thresholds.py`, `python src/explain.py`).
+  - Automated test runner (`pytest`).
+  - Report compilation script (`python reports/generate_pdf_report.py`).
   - Interactive local web server (`streamlit run app.py`).
 - **External Dependencies**: None (self-contained local file-based pipeline; no external databases, network APIs, or cloud services).
 - **Authentication & Authorization**: Not applicable for this local development milestone.

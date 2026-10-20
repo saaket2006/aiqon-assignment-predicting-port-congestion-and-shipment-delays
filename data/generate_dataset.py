@@ -21,7 +21,11 @@ PORTS = {
     "PORT_E": {"capacity": 9, "arrival_rate": 6.5},
 }
 
-def generate_dataset(output_path="port_congestion_synthetic.csv"):
+def generate_dataset(output_path=None):
+    if output_path is None:
+        output_path = Path(__file__).resolve().parent / "port_congestion_synthetic.csv"
+    else:
+        output_path = Path(output_path)
     rng = np.random.default_rng(SEED)
     rows = []
 
