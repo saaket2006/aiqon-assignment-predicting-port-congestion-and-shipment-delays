@@ -70,6 +70,17 @@
       "norm_label": "load_evaluation_summary()"
     },
     {
+      "label": "show_table()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L79",
+      "_origin": "ast",
+      "id": "app_show_table",
+      "community": 15,
+      "community_name": "app.py",
+      "norm_label": "show_table()"
+    },
+    {
       "label": "Port Congestion & Delay Risk Forecaster - Streamlit Web Application This app\u2026",
       "file_type": "rationale",
       "source_file": "app.py",
@@ -112,6 +123,17 @@
       "community": 15,
       "community_name": "app.py",
       "norm_label": "loads evaluation comparison metrics if available."
+    },
+    {
+      "label": "Renders a dataframe cleanly across Streamlit versions with stretch width.",
+      "file_type": "rationale",
+      "source_file": "app.py",
+      "source_location": "L80",
+      "_origin": "ast",
+      "id": "app_rationale_80",
+      "community": 15,
+      "community_name": "app.py",
+      "norm_label": "renders a dataframe cleanly across streamlit versions with stretch width."
     },
     {
       "label": "generate_dataset.py",
@@ -816,6 +838,39 @@
       "community": 19,
       "community_name": "conftest.py",
       "norm_label": "conftest.py"
+    },
+    {
+      "label": "smoke_test_dashboard.py",
+      "file_type": "code",
+      "source_file": "tests/smoke_test_dashboard.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_smoke_test_dashboard",
+      "community": 20,
+      "community_name": "smoke_test_dashboard.py",
+      "norm_label": "smoke_test_dashboard.py"
+    },
+    {
+      "label": "run_dashboard_smoke_test()",
+      "file_type": "code",
+      "source_file": "tests/smoke_test_dashboard.py",
+      "source_location": "L24",
+      "_origin": "ast",
+      "id": "tests_smoke_test_dashboard_run_dashboard_smoke_test",
+      "community": 20,
+      "community_name": "smoke_test_dashboard.py",
+      "norm_label": "run_dashboard_smoke_test()"
+    },
+    {
+      "label": "End-to-End Smoke Test for Port Congestion Streamlit Dashboard (app.py).\u2026",
+      "file_type": "rationale",
+      "source_file": "tests/smoke_test_dashboard.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_smoke_test_dashboard_rationale_1",
+      "community": 20,
+      "community_name": "smoke_test_dashboard.py",
+      "norm_label": "end-to-end smoke test for port congestion streamlit dashboard (app.py)...."
     },
     {
       "label": "test_pipeline.py",
@@ -2470,6 +2525,17 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L79",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "app",
+      "target": "app_show_table",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "app.py",
@@ -2547,6 +2613,17 @@
       "_origin": "ast",
       "source": "app_rationale_67",
       "target": "app_load_evaluation_summary",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L80",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "app_rationale_80",
+      "target": "app_show_table",
       "confidence_score": 1.0
     },
     {
@@ -3665,6 +3742,28 @@
       "_origin": "ast",
       "source": "src_train_rationale_173",
       "target": "src_train_train_and_evaluate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/smoke_test_dashboard.py",
+      "source_location": "L24",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_smoke_test_dashboard",
+      "target": "tests_smoke_test_dashboard_run_dashboard_smoke_test",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/smoke_test_dashboard.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_smoke_test_dashboard_rationale_1",
+      "target": "tests_smoke_test_dashboard",
       "confidence_score": 1.0
     },
     {
@@ -5155,5 +5254,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "08735af765fc8b3d379fc58c0108f39ae6da4e79"
+  "built_at_commit": "d33454aac09f7c0021117f04d0ba6e6d28059342"
 }

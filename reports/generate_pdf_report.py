@@ -230,7 +230,7 @@ def build_pdf():
             body_style,
         )
     )
-    story.append(Paragraph("• <b>Target Formulation:</b> The target <code>target_delayed_next_6h</code> is defined as <code>(actual_delay_hours &gt; 12.0)</code> occurring during the <b>following</b> 6-hour interval (<i>t + 6h to t + 12h</i>).", bullet_style))
+    story.append(Paragraph("• <b>Target Formulation:</b> The target <code>target_delayed_next_6h</code> is defined as <code>(actual_delay_hours &gt; 12.0)</code> occurring during the immediate next 6-hour operational interval (<i>T<sub>cutoff</sub> &rarr; T<sub>cutoff</sub> + 6h</i>).", bullet_style))
     story.append(Paragraph("• <b>Intra-Port Alignment:</b> In <code>src/prepare_data.py</code>, target shifting is executed strictly within port groups via <code>df.groupby('port_id')['is_delayed'].shift(-1)</code>. Cross-port boundary contamination is impossible.", bullet_style))
     story.append(Paragraph("• <b>Boundary Row Handling:</b> The terminal record for each port lacks a subsequent observation; exactly 5 boundary records are pruned, yielding a validated modeling dataset of 2,495 rows.", bullet_style))
     story.append(Paragraph("• <b>Zero Target Leakage:</b> Current-interval outcome fields (<code>delay_hours</code>, <code>actual_delay_hours</code>, <code>is_delayed</code>) are permanently dropped from the feature space, guaranteeing that only pre-cutoff information is visible to classifiers.", bullet_style))

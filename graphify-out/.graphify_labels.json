@@ -18,5 +18,6 @@
   "16": "Port Congestion and Shipping Delay Forecaster",
   "17": "Port Congestion & Shipment Delay Forecaster",
   "18": "NumberedCanvas",
-  "19": "conftest.py"
+  "19": "conftest.py",
+  "20": "smoke_test_dashboard.py"
 }

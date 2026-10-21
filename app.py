@@ -76,6 +76,14 @@ feat_imp_df = load_feature_importances()
 eval_summary = load_evaluation_summary()
 
 
+def show_table(df, hide_index=True):
+    """Renders a dataframe cleanly across Streamlit versions with stretch width."""
+    try:
+        st.dataframe(df, hide_index=hide_index, width="stretch")
+    except TypeError:
+        st.dataframe(df, hide_index=hide_index, use_container_width=True)
+
+
 # -----------------------------------------------------------------------------
 # Header and System Overview
 # -----------------------------------------------------------------------------
@@ -90,10 +98,12 @@ st.markdown(
 with st.expander("ℹ️ How This Forecasting System Works", expanded=False):
     st.markdown(
         """
-        - **Forecast Cutoff:** The prediction is issued at the exact moment the current 6-hour observation window closes.
-        - **Forecast Horizon:** The model predicts delay occurrence for the **following 6-hour interval** ($t+6\text{h}$ to $t+12\text{h}$).
+        - **Observation Window:** The current six-hour operational window (e.g., 06:00 to 12:00) during which port activities are observed.
+        - **Forecast Cutoff:** The closing instant of the observation window (e.g., 12:00) at which the prediction is issued.
+        - **Forecast Horizon (Next 6h):** The immediate following six-hour operational interval (e.g., 12:00 to 18:00) for which delay risk is predicted.
+        - **Target Definition:** Class 1 indicates port delay > 12 hours during the forecast horizon; Class 0 indicates on-time (<= 12 hours).
         - **No Retrospective Leakage:** Current interval delays, future outcomes, and target fields are strictly excluded from predictors.
-        - **Operating Threshold:** Defaults to **0.40** (the operational higher-recall threshold selected on validation data to catch unexpected bottlenecks early).
+        - **Operating Threshold:** Defaults to **0.40** (the operational higher-recall threshold selected on validation data to prioritize catching bottlenecks early).
         - **Uncalibrated Probability:** The percentage represents the raw fraction of decision trees voting for a delay; it is uncalibrated and should not be treated as a validated real-world probability.
         """
     )
@@ -202,7 +212,7 @@ with col_time3:
 
     cutoff_str = cutoff_dt.strftime("%Y-%m-%d %H:%M")
     target_horizon_str = f"{cutoff_dt.strftime('%Y-%m-%d %H:%M')} to {horizon_end_dt.strftime('%Y-%m-%d %H:%M')}"
-    st.info(f"**Forecast Cutoff:** `{cutoff_str}`\n\n**Predicted Horizon:** `{target_horizon_str}`")
+    st.info(f"**Forecast Cutoff:** `{cutoff_str}`\n\n**Forecast Horizon (Next 6h):** `{target_horizon_str}`")
 
 col1, col2 = st.columns(2)
 
@@ -337,7 +347,7 @@ if predict_clicked and is_valid_capacity:
 
     with res_col3:
         st.info(
-            f"**Target Horizon:**\n`{target_horizon_str}`\n\n"
+            f"**Forecast Horizon (Next 6h):**\n`{target_horizon_str}`\n\n"
             f"**Decision Threshold:** `{threshold:.2f}`\n\n"
             f"*(Delay defined as actual delay > 12h)*"
         )
@@ -365,7 +375,7 @@ if predict_clicked and is_valid_capacity:
                 .reset_index()
             )
             agg_imp.columns = ["Feature", "Global Weight"]
-            st.dataframe(agg_imp.head(6), hide_index=True, use_container_width=True)
+            show_table(agg_imp.head(6), hide_index=True)
             st.caption("Across all trees, these factors explained the greatest variance in distinguishing delayed vs. on-time intervals.")
 
     with exp_col2:
@@ -396,7 +406,7 @@ if predict_clicked and is_valid_capacity:
                 "Situational Status": "Capacity Disrupted" if weather_condition in ["Storm", "Rain"] else "Normal Weather",
             },
         ]
-        st.dataframe(pd.DataFrame(context_rows), hide_index=True, use_container_width=True)
+        show_table(pd.DataFrame(context_rows), hide_index=True)
 
     st.info(
         "🔍 **Non-Causal Governance Notice:** The observed conditions above provide operational background associated with past synthetic delays. "
@@ -458,7 +468,7 @@ with st.expander("📊 Historical Model Performance & Threshold Evaluation (Vali
                 "Delays Caught": test_eval["f1_maximizing_threshold_0_55"].get("delays_caught", "14 / 53"),
             },
         ]
-        st.dataframe(pd.DataFrame(eval_table), hide_index=True, use_container_width=True)
+        show_table(pd.DataFrame(eval_table), hide_index=True)
         st.caption("Selected threshold 0.40 catches 31 of 53 delays on the held-out test set compared to 23 at threshold 0.50 and 14 at threshold 0.55.")
     else:
         st.info("Evaluation artifacts not found. Run 'python src/evaluate_thresholds.py' to generate performance tables.")

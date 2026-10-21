@@ -17,7 +17,7 @@ Provide port authorities, logistics dispatchers, and shipping operators with a *
 
 - **Binary Classification Target (`target_delayed_next_6h`)**:
   $$\text{target\_delayed\_next\_6h} = \begin{cases} 1 & \text{if } \text{actual\_delay\_hours} > 12.0 \text{ in interval } t+1 \\ 0 & \text{otherwise} \end{cases}$$
-- **Forecast Horizon**: The forecast is generated at the exact close of the current 6-hour observation window ($t$) and predicts congestion for the subsequent 6-hour horizon ($t \to t+6\text{h}$).
+- **Forecast Horizon**: The forecast is generated at the close of the current 6-hour observation window ($T_{\text{cutoff}}$) and predicts whether an operational delay (>12 hours) will occur during the immediate next 6-hour interval ($T_{\text{cutoff}} \to T_{\text{cutoff}} + 6\text{h}$).
 - **Target Alignment**: Forward shifting (`shift(-1)`) is computed strictly within port groups (`port_id`). The final observation record for each port lacks a subsequent interval and is dropped (5 terminal records removed; dataset transitions from 2,500 to 2,495 rows).
 - **Target Leakage Prevention**: All current-interval delay and outcome fields (`delay_hours`, `delayed`, `actual_delay_hours`) are strictly purged from predictor features to ensure zero retrospective information leakage.
 

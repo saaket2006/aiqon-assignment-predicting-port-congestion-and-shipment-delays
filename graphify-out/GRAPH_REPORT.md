@@ -1,16 +1,16 @@
-# Graph Report - aiqon-assignment-predicting-port-congestion-and-shipment-delays  (2026-10-20)
+# Graph Report - aiqon-assignment-predicting-port-congestion-and-shipment-delays  (2026-10-21)
 
 ## Corpus Check
-- 24 files · ~18,013 words
+- 25 files · ~18,579 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 221 nodes · 242 edges · 20 communities (18 shown, 2 thin omitted)
+- 226 nodes · 246 edges · 21 communities (18 shown, 3 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `08735af7`
+- Built from commit: `d33454aa`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -33,6 +33,7 @@
 - Port Congestion and Shipping Delay Forecaster
 - Port Congestion & Shipment Delay Forecaster
 - NumberedCanvas
+- smoke_test_dashboard.py
 
 ## God Nodes (most connected - your core abstractions)
 1. `AI System Design Report` - 12 edges
@@ -61,7 +62,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (20 total, 2 thin omitted)
+## Communities (21 total, 3 thin omitted)
 
 ### Community 0 - "train.py"
 Cohesion: 0.10
@@ -112,8 +113,8 @@ Cohesion: 0.50
 Nodes (4): format_explanation(), DataFrame, Series, Generates a beginner-friendly explanation for a single prediction.
 
 ### Community 15 - "app.py"
-Cohesion: 0.22
-Nodes (9): load_evaluation_summary(), load_feature_importances(), load_model_pipeline(), Port Congestion & Delay Risk Forecaster - Streamlit Web Application This app…, Loads the trained Random Forest model and preprocessing pipeline once., Loads the global Random Forest feature importances., Loads evaluation comparison metrics if available., cache_data (+1 more)
+Cohesion: 0.18
+Nodes (11): load_evaluation_summary(), load_feature_importances(), load_model_pipeline(), Port Congestion & Delay Risk Forecaster - Streamlit Web Application This app…, Loads the trained Random Forest model and preprocessing pipeline once., Loads the global Random Forest feature importances., Loads evaluation comparison metrics if available., Renders a dataframe cleanly across Streamlit versions with stretch width. (+3 more)
 
 ### Community 16 - "Port Congestion and Shipping Delay Forecaster"
 Cohesion: 0.10
@@ -130,17 +131,17 @@ Nodes (3): NumberedCanvas, Script to generate the official 3-page Technical PDF 
 ## Knowledge Gaps
 - **89 isolated node(s):** `graphify`, `Workflow: graphify`, `1. Major Components`, `2. Primary Data Stores & Artifacts`, `3. Data Flow` (+84 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **2 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **3 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `split_data_chronologically()` connect `train.py` to `test_pipeline.py`?**
-  _High betweenness centrality (0.029) - this node is a cross-community bridge._
-- **Why does `load_dataset()` connect `train.py` to `test_pipeline.py`?**
   _High betweenness centrality (0.028) - this node is a cross-community bridge._
+- **Why does `load_dataset()` connect `train.py` to `test_pipeline.py`?**
+  _High betweenness centrality (0.027) - this node is a cross-community bridge._
 - **Why does `Port Congestion and Shipping Delay Forecaster` connect `Port Congestion and Shipping Delay Forecaster` to `Port Congestion & Shipment Delay Forecaster`?**
-  _High betweenness centrality (0.014) - this node is a cross-community bridge._
+  _High betweenness centrality (0.013) - this node is a cross-community bridge._
 - **What connects `graphify`, `Workflow: graphify`, `1. Major Components` to the rest of the system?**
   _89 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `train.py` be split into smaller, more focused modules?**
