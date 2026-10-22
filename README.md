@@ -137,9 +137,6 @@ python reports/generate_pdf_report.py
 ```
 The resulting PDF is saved to `reports/technical_report.pdf`.
 
-### 6. Five-Minute Demonstration Walkthrough
-Refer to [`docs/demo_plan.md`](docs/demo_plan.md) for a structured 5-minute presentation guide covering live dashboard interactions and scenario testing.
-
 ---
 
 ## 7. Project Structure
@@ -155,7 +152,6 @@ Refer to [`docs/demo_plan.md`](docs/demo_plan.md) for a structured 5-minute pres
 │   ├── port_congestion_forecasting_dataset.csv   # Prepared forecasting dataset (2,495 rows)
 │   └── port_congestion_validation_report.md      # Data profile and validation summary
 ├── docs/
-│   ├── demo_plan.md                              # Five-minute interview / demonstration guide
 │   ├── problem_definition_and_scope.md           # Problem framing and boundary conditions
 │   ├── product_requirements_document.md          # User stories, operating threshold needs
 │   ├── software_requirements_specification.md     # Pipeline functional & non-functional requirements
@@ -164,6 +160,7 @@ Refer to [`docs/demo_plan.md`](docs/demo_plan.md) for a structured 5-minute pres
 ├── models/
 │   └── random_forest_pipeline.joblib             # Serialized preprocessor + Random Forest model
 ├── reports/
+│   ├── figures/                                  # Publication-quality evaluation chart figures
 │   ├── generate_pdf_report.py                    # ReportLab script generating executive PDF report
 │   └── technical_report.pdf                      # Official 3-page technical PDF report
 ├── results/

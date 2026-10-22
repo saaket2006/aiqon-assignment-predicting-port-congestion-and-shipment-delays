@@ -1,16 +1,16 @@
-# Graph Report - aiqon-assignment-predicting-port-congestion-and-shipment-delays  (2026-10-21)
+# Graph Report - aiqon-assignment-predicting-port-congestion-and-shipment-delays  (2026-10-22)
 
 ## Corpus Check
-- 25 files · ~18,579 words
+- 24 files · ~27,819 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 226 nodes · 246 edges · 21 communities (18 shown, 3 thin omitted)
+- 219 nodes · 240 edges · 20 communities (17 shown, 3 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d33454aa`
+- Built from commit: `ce0c04de`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -31,7 +31,6 @@
 - format_explanation
 - app.py
 - Port Congestion and Shipping Delay Forecaster
-- Port Congestion & Shipment Delay Forecaster
 - NumberedCanvas
 - smoke_test_dashboard.py
 
@@ -62,7 +61,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (21 total, 3 thin omitted)
+## Communities (20 total, 3 thin omitted)
 
 ### Community 0 - "train.py"
 Cohesion: 0.10
@@ -118,18 +117,14 @@ Nodes (11): load_evaluation_summary(), load_feature_importances(), load_model_pi
 
 ### Community 16 - "Port Congestion and Shipping Delay Forecaster"
 Cohesion: 0.10
-Nodes (20): 1. Environment Setup, 1. Problem Statement & Project Objective, 2. End-to-End Execution Pipeline, 2. Forecast Target & Temporal Framing, 3. Dataset Description & Generation, 3. Launching the Interactive Web Interface, 4. Chronological Splitting & Modeling Approach, 4. Running the Automated Test Suite (+12 more)
-
-### Community 17 - "Port Congestion & Shipment Delay Forecaster"
-Cohesion: 0.20
-Nodes (8): Five-Minute Demonstration Plan, Port Congestion & Shipment Delay Forecaster, Step 1: Launch the Application (30 seconds), Step 2: Load a Preset Scenario (60 seconds), Step 3: Change Operational Conditions (30 seconds), Step 4: Generate Forecast & Interpret Results (75 seconds), Step 5: Review Operational Context & Limitations (60 seconds), Step 6: Historical Performance Review (45 seconds)
+Nodes (19): 1. Environment Setup, 1. Problem Statement & Project Objective, 2. End-to-End Execution Pipeline, 2. Forecast Target & Temporal Framing, 3. Dataset Description & Generation, 3. Launching the Interactive Web Interface, 4. Chronological Splitting & Modeling Approach, 4. Running the Automated Test Suite (+11 more)
 
 ### Community 18 - "NumberedCanvas"
-Cohesion: 0.28
-Nodes (3): NumberedCanvas, Script to generate the official 3-page Technical PDF Report using ReportLab.…, Canvas that computes total pages dynamically for 'Page X of Y' footers.
+Cohesion: 0.21
+Nodes (7): build_pdf(), generate_figures(), NumberedCanvas, Path, Script to generate the official 3-page Technical PDF Report using ReportLab.…, Canvas that computes total pages dynamically for 'Page X of Y' footers., Generates the 3 evidence-based technical charts from existing artifacts.
 
 ## Knowledge Gaps
-- **89 isolated node(s):** `graphify`, `Workflow: graphify`, `1. Major Components`, `2. Primary Data Stores & Artifacts`, `3. Data Flow` (+84 more)
+- **82 isolated node(s):** `graphify`, `Workflow: graphify`, `1. Major Components`, `2. Primary Data Stores & Artifacts`, `3. Data Flow` (+77 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **3 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -137,13 +132,13 @@ Nodes (3): NumberedCanvas, Script to generate the official 3-page Technical PDF 
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `split_data_chronologically()` connect `train.py` to `test_pipeline.py`?**
-  _High betweenness centrality (0.028) - this node is a cross-community bridge._
+  _High betweenness centrality (0.030) - this node is a cross-community bridge._
 - **Why does `load_dataset()` connect `train.py` to `test_pipeline.py`?**
-  _High betweenness centrality (0.027) - this node is a cross-community bridge._
-- **Why does `Port Congestion and Shipping Delay Forecaster` connect `Port Congestion and Shipping Delay Forecaster` to `Port Congestion & Shipment Delay Forecaster`?**
-  _High betweenness centrality (0.013) - this node is a cross-community bridge._
+  _High betweenness centrality (0.029) - this node is a cross-community bridge._
+- **Why does `evaluate_threshold_range()` connect `evaluate_threshold_range` to `train.py`?**
+  _High betweenness centrality (0.011) - this node is a cross-community bridge._
 - **What connects `graphify`, `Workflow: graphify`, `1. Major Components` to the rest of the system?**
-  _89 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _82 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `train.py` be split into smaller, more focused modules?**
   _Cohesion score 0.1 - nodes in this community are weakly interconnected._
 - **Should `Product Requirements Document (PRD)` be split into smaller, more focused modules?**

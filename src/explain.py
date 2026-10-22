@@ -234,10 +234,10 @@ def print_explanation_card(expl: dict) -> None:
     print("+" + "-" * 72 + "+\n")
 
 
-def run_explanation_demo() -> None:
+def run_explanations() -> None:
     """Runs prediction explanations on representative test set cases."""
     print("=" * 74)
-    print("PORT CONGESTION FORECASTING: PREDICTION EXPLANATIONS DEMO")
+    print("PORT CONGESTION FORECASTING: PREDICTION EXPLANATIONS")
     print("=" * 74)
 
     pipeline, feat_imp_df, train_stats, test_df = load_explainer_assets()
@@ -295,4 +295,4 @@ def run_explanation_demo() -> None:
 
 
 if __name__ == "__main__":
-    run_explanation_demo()
+    run_explanations()

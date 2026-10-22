@@ -46,7 +46,6 @@
 - [x] Include a reproducible training/evaluation command.
 - [x] Generate the final metrics report from the actual run.
 - [x] Write the 2–3-page technical PDF report.
-- [x] Prepare a 5-minute demo walkthrough (`docs/demo_plan.md`).
 - [x] Verify repository cleanliness and final submission checklist.
 
 ## Test matrix
