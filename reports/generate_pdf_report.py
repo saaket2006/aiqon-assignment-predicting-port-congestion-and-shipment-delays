@@ -630,7 +630,7 @@ def build_pdf():
             ("ROWBACKGROUNDS", (0, 1), (-1, -3), [colors.white, colors.HexColor("#F8F9FA")]),
             ("BACKGROUND", (0, -2), (-1, -1), colors.HexColor("#EBF3F5")),
             ("GRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#CCCCCC")),
-            ("PADDING", (0, 0), (-1, -1), 1.8),
+            ("PADDING", (0, 0), (-1, -1), 1.3),
         ])
     )
     story.append(t_metrics)
@@ -638,8 +638,8 @@ def build_pdf():
     # -------------------------------------------------------------------------
     # Figures 1 and 2: Side-by-Side Visualizations (Page 2)
     # -------------------------------------------------------------------------
-    img1 = Image(str(figures["fig1"]), width=244, height=115)
-    img2 = Image(str(figures["fig2"]), width=244, height=115)
+    img1 = Image(str(figures["fig1"]), width=242, height=105)
+    img2 = Image(str(figures["fig2"]), width=242, height=105)
 
     cap1 = Paragraph(
         "<b>Figure 1: Precision–Recall Trade-off across Decision Thresholds (Held-out Test).</b> "
@@ -661,7 +661,7 @@ def build_pdf():
             [img1, "", img2],
             [cap1, "", cap2],
         ],
-        colWidths=[244, 16, 244],
+        colWidths=[242, 20, 242],
     )
     t_figs_p2.setStyle(
         TableStyle([
@@ -672,31 +672,57 @@ def build_pdf():
             ("BOTTOMPADDING", (0, 0), (-1, -1), 1),
         ])
     )
-    story.append(Spacer(1, 2))
+    story.append(Spacer(1, 1))
     story.append(t_figs_p2)
+
+    # Load reproducible evaluation uncertainty stats
+    uncertainty_json_path = PROJECT_ROOT / "results" / "evaluation_uncertainty.json"
+    if not uncertainty_json_path.exists():
+        import sys
+        if str(PROJECT_ROOT) not in sys.path:
+            sys.path.insert(0, str(PROJECT_ROOT))
+        from src.evaluation_stats import generate_and_save_uncertainty_artifact
+        generate_and_save_uncertainty_artifact()
+
+    with open(uncertainty_json_path, "r", encoding="utf-8") as f:
+        unc_data = json.load(f)
+
+    bci = unc_data["bootstrap_confidence_intervals"]
+    rec_ci_str = bci["recall_threshold_0_40"]["ci_percentage_formatted"]
+    auc_lo = bci["roc_auc"]["ci_lower"]
+    auc_hi = bci["roc_auc"]["ci_upper"]
+    auc_ci_str = f"[{auc_lo:.3f}, {auc_hi:.3f}]"
+    b_seed = unc_data["metadata"]["seed"]
+    b_n = unc_data["metadata"]["n_bootstraps"]
+
+    cost_mod = unc_data["expected_cost_model"]
+    c_040 = int(cost_mod["threshold_0_40"]["expected_cost_units"])
+    c_050 = int(cost_mod["threshold_0_50"]["expected_cost_units"])
+    c_055 = int(cost_mod["threshold_0_55"]["expected_cost_units"])
+    be_ratio = cost_mod["break_even_analysis"]["break_even_ratio_040_vs_050"]
 
     # Section 6: Threshold Selection Analysis
     story.append(Paragraph("6. Decision Threshold Policy, Cost Model & Evaluation Uncertainty", h1_style))
     story.append(
         Paragraph(
-            "<b>Quantitative Expected-Cost Model:</b> Standard models default to an unadjusted 0.50 cutoff. In marine terminal operations, "
-            "<b>false negatives (unpredicted delays)</b> incur severe cascading costs (estimated at ~$25,000–$50,000 per window "
-            "from vessel idling, demurrage, and intermodal train/truck disruption), whereas <b>false alarms</b> merely trigger "
-            "modest dispatcher review (~$2,500–$5,000). "
-            "Modeling total expected loss as <i>Loss = FN &times; R + FP &times; 1</i> (where <i>R = C<sub>delay</sub> / C<sub>alarm</sub></i>), "
-            "threshold 0.40 minimizes expected cost whenever missed delays are at least 6&times; costlier than false alarms (<i>R &ge; 5.9</i>). "
-            "At an 8:1 ratio, threshold 0.40 yields 264 cost units (22&times;8 + 88), outperforming threshold 0.50 (281 units; +6.4% cost) "
-            "and threshold 0.55 (335 units; +26.9% cost).",
+            "<b>Quantitative Expected-Cost Model (Assumed Ratio):</b> Standard models default to an unadjusted 0.50 cutoff. "
+            "Under an assumed 8:1 operational cost ratio (<i>R = C<sub>delay</sub> / C<sub>alarm</sub> = 8.0</i> with <i>C<sub>alarm</sub> = 1.0</i> unit), "
+            "derived from planning assumptions (~$25,000–$50,000 vessel idling and demurrage costs for missed delays vs. ~$2,500–$5,000 dispatcher review costs for false alarms), "
+            "modeling expected loss as <i>Loss = FN &times; 8.0 + FP &times; 1.0</i> yields "
+            f"<b>{c_040} cost units</b> at threshold 0.40 (22&times;8 + 88), outperforming threshold 0.50 ({c_050} units; +6.4% cost) "
+            f"and threshold 0.55 ({c_055} units; +26.9% cost). Threshold 0.40 minimizes expected loss under this model whenever missed delays are assumed "
+            f"to be at least 5.9&times; costlier than false alarms (<i>R &ge; {be_ratio:.3f}</i>). "
+            "These dollar figures and ratios represent illustrative domain assumptions, not empirically measured accounting costs or a mathematically proven operational optimum.",
             body_style,
         )
     )
     story.append(
         Paragraph(
             "<b>Operational Judgment & Sample Uncertainty:</b> Rather than applying automated loss optimization over synthetic data, "
-            "threshold 0.40 was chosen by <b>operational judgment</b> on validation data (71.79% recall, 28/39 delays caught; 37.84% precision) "
-            "to establish an early-warning buffer. On the held-out test set, it caught 31 of 53 delays (58.49% recall, 95% bootstrap CI: [44.7%, 72.1%]) "
-            "with ROC-AUC = 0.736 (95% CI: [0.650, 0.811]). The test delay rate (10.6% vs. 15.6% validation) reflects temporal seasonality, "
-            "highlighting that point estimates on 53 positive cases carry measurable sampling uncertainty.",
+            "threshold 0.40 was chosen strictly by <b>operational judgment</b> on validation data (71.79% recall, 28/39 delays caught; 37.84% precision) "
+            f"to establish an early-warning buffer. On the held-out test set, it caught 31 of 53 delays (58.49% recall, reproducible 95% bootstrap CI: {rec_ci_str}) "
+            f"with ROC-AUC = 0.7356 (95% CI: {auc_ci_str}; {b_n:,} resamples, percentile method, seed={b_seed}). The test delay rate (10.6% vs. 15.6% validation) "
+            "reflects temporal variation, highlighting that point estimates on 53 positive cases carry measurable sampling uncertainty.",
             body_style,
         )
     )
@@ -762,7 +788,7 @@ def build_pdf():
             Paragraph(
                 "<b>Summary:</b> This forecasting system implements chronological data partitioning, baseline benchmarks, "
                 "and operational threshold evaluation for 6-hour port delay early warning. The pipeline pairs reproducible "
-                "model training with an interactive Streamlit dashboard, comprehensive automated test coverage (17/17 passed), "
+                "model training with an interactive Streamlit dashboard, comprehensive automated test coverage (23/23 passed), "
                 "and explicit documentation of model limitations and evaluation uncertainties.",
                 callout_style,
             )

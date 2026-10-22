@@ -125,12 +125,18 @@ streamlit run app.py
 The application will open in your browser at `http://localhost:8501`.
 
 ### 4. Running the Automated Test Suite
-Execute all 17 automated regression and unit tests:
+Execute all 23 automated regression, uncertainty, and unit tests:
 ```bash
 pytest -v
 ```
 
-### 5. Compiling the Technical PDF Report
+### 5. (Optional) Uncertainty & Expected-Cost Analysis
+Run deterministic bootstrap confidence intervals (2,000 resamples) and threshold cost modeling:
+```bash
+python src/evaluation_stats.py
+```
+
+### 6. Compiling the Technical PDF Report
 Compile the official 3-page executive technical report:
 ```bash
 python reports/generate_pdf_report.py
@@ -169,15 +175,19 @@ The resulting PDF is saved to `reports/technical_report.pdf`.
 │   ├── feature_importance.csv                    # Global MDI feature importance weights
 │   ├── threshold_comparison.csv                  # Validation performance across candidate thresholds
 │   ├── threshold_evaluation.json                 # Comparative evaluation of threshold policies
+│   ├── evaluation_uncertainty.json               # Reproducible bootstrap CIs and expected-cost model
 │   └── prediction_explanations.json              # Situational contextual summaries for test cases
 ├── src/
 │   ├── prepare_data.py                           # Target alignment and data sanitation
 │   ├── train.py                                  # Chronological partitioning and model training
 │   ├── evaluate_thresholds.py                    # Decision threshold tuning and policy evaluation
-│   └── explain.py                                # Situational context and explanation generator
+│   ├── explain.py                                # Situational context and explanation generator
+│   └── evaluation_stats.py                       # Reproducible bootstrap CIs and cost modeling
 └── tests/
     ├── conftest.py                               # Pytest project configuration
-    └── test_pipeline.py                          # 17 automated regression and unit tests
+    ├── test_pipeline.py                          # 17 automated pipeline, leakage & dashboard tests
+    ├── test_evaluation_stats.py                  # 6 automated tests for bootstrap CIs and cost models
+    └── smoke_test_dashboard.py                   # 6-phase headless Streamlit AppTest verification
 ```
 
 ---
