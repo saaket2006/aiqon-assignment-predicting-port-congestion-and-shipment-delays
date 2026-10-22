@@ -94,13 +94,34 @@ To prevent temporal lookahead leakage, data is partitioned using **strict chrono
 
 ## 6. Installation & Execution Guide
 
-### 1. Environment Setup
-Clone the repository and install dependencies:
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/saaket2006/aiqon-assignment-predicting-port-congestion-and-shipment-delays
+cd aiqon-assignment-predicting-port-congestion-and-shipment-delays
+```
+
+### 2. Create a virtual environment (recommended)
+
+Windows
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+```
+
+macOS / Linux
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+### 3. Install dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. End-to-End Execution Pipeline
+### 4. End-to-End Execution Pipeline
 Execute each step sequentially from the project root:
 
 ```bash
@@ -117,26 +138,26 @@ python src/evaluate_thresholds.py
 python src/explain.py
 ```
 
-### 3. Launching the Interactive Web Interface
+### 5. Launching the Interactive Web Interface
 Launch the Streamlit web application:
 ```bash
 streamlit run app.py
 ```
 The application will open in your browser at `http://localhost:8501`.
 
-### 4. Running the Automated Test Suite
+### 6. Running the Automated Test Suite
 Execute all 23 automated regression, uncertainty, and unit tests:
 ```bash
 pytest -v
 ```
 
-### 5. (Optional) Uncertainty & Expected-Cost Analysis
+### 7. (Optional) Uncertainty & Expected-Cost Analysis
 Run deterministic bootstrap confidence intervals (2,000 resamples) and threshold cost modeling:
 ```bash
 python src/evaluation_stats.py
 ```
 
-### 6. Compiling the Technical PDF Report
+### 8. Compiling the Technical PDF Report
 Compile the official 3-page executive technical report:
 ```bash
 python reports/generate_pdf_report.py

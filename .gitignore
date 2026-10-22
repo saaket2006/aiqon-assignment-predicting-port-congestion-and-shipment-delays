@@ -82,3 +82,6 @@ marimo/_lsp/
 
 .DS_Store
 Thumbs.db
+
+venv/
+.venv/
