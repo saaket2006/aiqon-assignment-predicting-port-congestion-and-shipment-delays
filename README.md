@@ -158,7 +158,7 @@ The resulting PDF is saved to `reports/technical_report.pdf`.
 │   ├── ai_system_design_report.md                # System components and ML architecture
 │   └── implementation_and_test_plan.md           # Verification and validation protocols
 ├── models/
-│   └── random_forest_pipeline.joblib             # Serialized preprocessor + Random Forest model
+│   └── random_forest_pipeline.joblib             # Serialized preprocessor + Random Forest model (reproducible via python src/train.py)
 ├── reports/
 │   ├── figures/                                  # Publication-quality evaluation chart figures
 │   ├── generate_pdf_report.py                    # ReportLab script generating executive PDF report

@@ -333,7 +333,7 @@ if predict_clicked and is_valid_capacity:
 
     with res_col1:
         st.metric(
-            label="Estimated Delay Probability",
+            label="Model Risk Score (Delay Probability)",
             value=f"{predicted_prob:.1%}",
             delta=f"{predicted_prob - threshold:+.1%} vs threshold",
             delta_color="inverse" if is_delayed else "normal",
@@ -353,8 +353,8 @@ if predict_clicked and is_valid_capacity:
         )
 
     st.caption(
-        "⚠️ **Statistical Disclaimer:** The estimated delay probability reflects the raw voting proportion across 100 ensemble trees. "
-        "It is uncalibrated and must not be interpreted as a validated real-world operational probability."
+        "⚠️ **Statistical & Calibration Note:** This model risk score reflects the tree voting proportion across 100 decision trees. "
+        "Because it has not undergone formal Platt/isotonic calibration, it represents relative operational risk rather than a certified real-world confidence interval."
     )
 
     # -------------------------------------------------------------------------
@@ -376,7 +376,7 @@ if predict_clicked and is_valid_capacity:
             )
             agg_imp.columns = ["Feature", "Global Weight"]
             show_table(agg_imp.head(6), hide_index=True)
-            st.caption("Across all trees, these factors explained the greatest variance in distinguishing delayed vs. on-time intervals.")
+            st.caption("Global weights represent Mean Decrease in Impurity (MDI) importance shares across tree splits, indicating overall model sensitivity.")
 
     with exp_col2:
         st.markdown("##### Entered Conditions vs. Historical Benchmarks")

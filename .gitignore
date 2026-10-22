@@ -74,7 +74,7 @@ docs/_build/
 target/
 cython_debug/
 
-graphify-out/cache/
+graphify-out/
 
 __marimo__/
 marimo/_static/

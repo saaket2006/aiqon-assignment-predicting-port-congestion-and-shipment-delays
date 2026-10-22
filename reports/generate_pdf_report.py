@@ -164,7 +164,7 @@ def generate_figures() -> dict[str, Path]:
     ax.axvline(0.40, color="#0F2942", linestyle="--", linewidth=0.8, alpha=0.5)
     ax.text(
         0.403,
-        13.0,
+        14.0,
         "Operational (0.40)\n[Selected on Val]",
         fontsize=5.6,
         color="#0F2942",
@@ -182,7 +182,7 @@ def generate_figures() -> dict[str, Path]:
     ax.set_ylabel("Score (%)", fontsize=6.8, fontweight="bold", color="#222222")
     ax.set_xticks(thresholds)
     ax.set_xticklabels(["0.40\n(Operational)", "0.50\n(Default)", "0.55\n(Val F1-Max)"], fontsize=6.0)
-    ax.set_ylim(8, 68)
+    ax.set_ylim(10, 72)
     ax.tick_params(axis="y", labelsize=6.2)
     ax.grid(True, linestyle=":", alpha=0.45, color="#CCCCCC")
     ax.legend(loc="upper right", fontsize=5.8, frameon=True, facecolor="#F8F9FA", edgecolor="#E2E8F0")
@@ -194,6 +194,10 @@ def generate_figures() -> dict[str, Path]:
 
     # -------------------------------------------------------------------------
     # Figure 2: Confusion Matrix at Threshold 0.40 (Held-out Test Set)
+    # Denominators explicitly labeled:
+    #   447 Actual On-time: TN = 359 (80.3%), FP = 88 (19.7% FPR)
+    #   53 Actual Delayed:  FN = 22 (41.5% FNR), TP = 31 (58.5% Recall)
+    #   500 Total Test Set Observations
     # -------------------------------------------------------------------------
     cm = np.array(test_eval["operational_threshold_0_40"]["confusion_matrix"])
     fig, ax = plt.subplots(figsize=(3.6, 1.7), dpi=300)
@@ -201,12 +205,18 @@ def generate_figures() -> dict[str, Path]:
     ax.set_facecolor("white")
 
     cell_colors = [
-        ["#E6F0FA", "#FEE2E2"],
-        ["#FEF3C7", "#D1FAE5"],
+        ["#E6F0FA", "#FEE2E2"],  # TN (soft blue), FP (soft red/coral)
+        ["#FEF3C7", "#D1FAE5"],  # FN (soft yellow/warning), TP (soft green)
     ]
     cell_texts = [
-        [f"{cm[0,0]}\nTrue Negatives\n(On-time: 71.8%)", f"{cm[0,1]}\nFalse Positives\n(False Alarm: 17.6%)"],
-        [f"{cm[1,0]}\nFalse Negatives\n(Missed: 4.4%)", f"{cm[1,1]}\nTrue Positives\n(Caught Delay: 6.2%)"],
+        [
+            f"{cm[0,0]}\nTrue Negatives\n80.3% of On-Time\n(359 / 447)\n[{cm[0,0]/500*100:.1f}% of total]",
+            f"{cm[0,1]}\nFalse Positives\n19.7% FPR\n(88 / 447)\n[{cm[0,1]/500*100:.1f}% of total]",
+        ],
+        [
+            f"{cm[1,0]}\nFalse Negatives\n41.5% FNR\n(22 / 53)\n[{cm[1,0]/500*100:.1f}% of total]",
+            f"{cm[1,1]}\nTrue Positives\n58.5% Recall\n(31 / 53)\n[{cm[1,1]/500*100:.1f}% of total]",
+        ],
     ]
 
     for i in range(2):
@@ -221,17 +231,18 @@ def generate_figures() -> dict[str, Path]:
                 cell_texts[i][j],
                 ha="center",
                 va="center",
-                fontsize=6.0,
+                fontsize=5.5,
                 fontweight="bold",
                 color="#0F2942",
+                linespacing=1.2,
             )
 
     ax.set_xlim(0, 2)
     ax.set_ylim(0, 2)
     ax.set_xticks([0.5, 1.5])
-    ax.set_xticklabels(["Pred: On-time (0)", "Pred: Delayed (1)"], fontsize=6.6, fontweight="bold", color="#222222")
+    ax.set_xticklabels(["Pred: On-time (0)", "Pred: Delayed (1)"], fontsize=6.5, fontweight="bold", color="#222222")
     ax.set_yticks([0.5, 1.5])
-    ax.set_yticklabels(["Actual: Delayed (1)", "Actual: On-time (0)"], fontsize=6.6, fontweight="bold", color="#222222")
+    ax.set_yticklabels(["Actual: Delayed (1)", "Actual: On-time (0)"], fontsize=6.5, fontweight="bold", color="#222222")
     ax.set_title(
         "Test Confusion Matrix at Threshold 0.40\n(500 Observations, 53 Actual Delays)",
         fontsize=7.4,
@@ -249,22 +260,22 @@ def generate_figures() -> dict[str, Path]:
     plt.close()
 
     # -------------------------------------------------------------------------
-    # Figure 3: Top 5 Global Feature Importances
+    # Figure 3: Top 5 Global Feature Importances (Zero Clipping)
     # -------------------------------------------------------------------------
     top5 = df_fi.head(5).copy()
     top5 = top5.iloc[::-1].reset_index(drop=True)
 
     feature_labels = {
         "queue_length": "Queue Backlog (queue_length)",
-        "historical_avg_delay_hours": "Recent Delay History (historical_avg_delay_hours)",
+        "historical_avg_delay_hours": "Delay History (historical_avg_delay_hours)",
         "arrival_load_ratio": "Arrival Load Ratio (arrival_load_ratio)",
-        "vessel_arrivals_6h": "Vessel Arrivals in 6h (vessel_arrivals_6h)",
-        "effective_capacity_6h": "Effective Berth Capacity (effective_capacity_6h)",
+        "vessel_arrivals_6h": "Vessel Arrivals (vessel_arrivals_6h)",
+        "effective_capacity_6h": "Effective Capacity (effective_capacity_6h)",
     }
     labels = [feature_labels.get(f, f) for f in top5["feature"]]
     importances = top5["importance"].values
 
-    fig, ax = plt.subplots(figsize=(6.2, 1.35), dpi=300)
+    fig, ax = plt.subplots(figsize=(6.2, 1.48), dpi=300)
     fig.patch.set_facecolor("white")
     ax.set_facecolor("white")
 
@@ -284,18 +295,18 @@ def generate_figures() -> dict[str, Path]:
 
     ax.set_yticks(range(5))
     ax.set_yticklabels(labels, fontsize=6.6, color="#222222")
-    ax.set_xlabel("Mean Decrease in Impurity (Global Feature Importance)", fontsize=6.5, fontweight="bold", color="#222222")
+    ax.set_xlabel("Mean Decrease in Impurity (Global Split Feature Importance)", fontsize=6.5, fontweight="bold", color="#222222")
     ax.set_title(
-        "Top 5 Global Feature Importances (Random Forest Ensemble, 100 Trees)",
-        fontsize=7.4,
+        "Top 5 Global Feature Importances (Random Forest)",
+        fontsize=7.2,
         fontweight="bold",
-        pad=3,
+        pad=4,
         color="#0F2942",
     )
-    ax.set_xlim(0, 0.30)
+    ax.set_xlim(0, 0.33)  # Expanded to prevent label clipping
     ax.tick_params(axis="x", labelsize=6.2)
     ax.grid(True, axis="x", linestyle=":", alpha=0.45, color="#CCCCCC")
-    plt.tight_layout()
+    plt.subplots_adjust(left=0.44, right=0.96, top=0.86, bottom=0.26)
 
     fig3_path = FIGURES_DIR / "fig3_feature_importance.png"
     plt.savefig(fig3_path, dpi=300)
@@ -355,7 +366,7 @@ def build_pdf():
         fontSize=11,
         leading=14,
         textColor=c_primary,
-        spaceBefore=6,
+        spaceBefore=5.5,
         spaceAfter=2.5,
         keepWithNext=True,
     )
@@ -363,8 +374,8 @@ def build_pdf():
         "Body_Custom",
         parent=styles["Normal"],
         fontName="Helvetica",
-        fontSize=8.1,
-        leading=10.9,
+        fontSize=8.0,
+        leading=10.8,
         textColor=c_text,
         spaceAfter=3,
     )
@@ -379,16 +390,16 @@ def build_pdf():
         "Caption_Custom",
         parent=styles["Normal"],
         fontName="Helvetica-Oblique",
-        fontSize=6.5,
-        leading=8.3,
+        fontSize=6.4,
+        leading=8.2,
         textColor=c_muted,
         spaceAfter=1.5,
     )
     callout_style = ParagraphStyle(
         "Callout_Custom",
         parent=body_style,
-        fontSize=7.6,
-        leading=9.8,
+        fontSize=7.5,
+        leading=9.6,
         textColor=c_primary,
     )
     table_cell = ParagraphStyle(
@@ -433,8 +444,8 @@ def build_pdf():
             "The objective of this project is to build an <b>interpretable early-warning forecasting model</b> that predicts whether "
             "a commercial port will experience an operational delay exceeding <b>12 hours</b> during the <b>next six-hour interval</b>, "
             "using only conditions observable at the close of the <b>current six-hour window</b>. "
-            "Crucially, the system must deliver actionable probability scores, support flexible decision thresholds, "
-            "and provide clear operational explanations without claiming ungrounded causal relationships.",
+            "Crucially, the system delivers actionable continuous <b>model risk scores</b>, supports flexible decision thresholds, "
+            "and provides clear situational context without asserting ungrounded causal relationships.",
             body_style,
         )
     )
@@ -503,7 +514,7 @@ def build_pdf():
     )
 
     story.append(Paragraph("• <b>Training Split (70% — 1,745 rows):</b> Jan 1, 2026 00:00 to Mar 29, 2026 00:00 (204 delays, 11.7% base rate).", bullet_style))
-    story.append(Paragraph("• <b>Validation Split (10% — 250 rows):</b> Mar 29, 2026 06:00 to Apr 10, 2026 12:00 (39 delays, 15.6% base rate) — reserved strictly for threshold tuning.", bullet_style))
+    story.append(Paragraph("• <b>Validation Split (10% — 250 rows):</b> Mar 29, 2026 06:00 to Apr 10, 2026 12:00 (39 delays, 15.6% base rate) — reserved strictly for threshold selection.", bullet_style))
     story.append(Paragraph("• <b>Held-Out Test Split (20% — 500 rows):</b> Apr 10, 2026 18:00 to May 5, 2026 12:00 (53 delays, 10.6% base rate) — locked for final unbiased evaluation.", bullet_style))
 
     story.append(Paragraph("<b>Model Architecture:</b> We deploy a scikit-learn <code>Pipeline</code> encapsulating a <code>ColumnTransformer</code> (one-hot encoding <code>port_id</code>, <code>weather_condition</code>, and <code>day_of_week</code>, with numeric passthrough) and a <code>RandomForestClassifier</code> (100 estimators, <code>max_depth=6</code>, <code>min_samples_leaf=2</code>, <code>class_weight='balanced'</code>). The pipeline is fitted exclusively on the training partition.", body_style))
@@ -619,7 +630,7 @@ def build_pdf():
             ("ROWBACKGROUNDS", (0, 1), (-1, -3), [colors.white, colors.HexColor("#F8F9FA")]),
             ("BACKGROUND", (0, -2), (-1, -1), colors.HexColor("#EBF3F5")),
             ("GRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#CCCCCC")),
-            ("PADDING", (0, 0), (-1, -1), 2.0),
+            ("PADDING", (0, 0), (-1, -1), 1.8),
         ])
     )
     story.append(t_metrics)
@@ -638,9 +649,10 @@ def build_pdf():
         caption_style,
     )
     cap2 = Paragraph(
-        "<b>Figure 2: Confusion Matrix at Selected Threshold 0.40 (Held-out Test).</b> "
-        "The operational policy successfully detected 31 of 53 actual delays (58.5% recall) with 22 false negatives. "
-        "To capture these delays, 88 false alarms were generated out of 447 on-time intervals (19.7% false-positive rate).",
+        "<b>Figure 2: Confusion Matrix at Selected Threshold 0.40 (Held-out Test, N = 500).</b> "
+        "The operational policy successfully detected 31 of 53 delays (58.5% recall; 22 false negatives, 41.5% FNR). "
+        "To achieve early warning, 88 false alarms were produced among 447 actual on-time intervals (19.7% false-positive rate; "
+        "representing 17.6% of all 500 test intervals).",
         caption_style,
     )
 
@@ -664,23 +676,27 @@ def build_pdf():
     story.append(t_figs_p2)
 
     # Section 6: Threshold Selection Analysis
-    story.append(Paragraph("6. Decision Threshold Policy & Asymmetric Cost Trade-Offs", h1_style))
+    story.append(Paragraph("6. Decision Threshold Policy, Cost Model & Evaluation Uncertainty", h1_style))
     story.append(
         Paragraph(
-            "Standard machine learning defaults to an arbitrary 0.50 probability cutoff. However, in maritime terminal logistics, "
-            "<b>false negatives (unpredicted bottlenecks)</b> incur severe cascading costs: idle containerships burning bunker fuel, "
-            "intermodal rail/truck schedule collapse, and carrier demurrage penalties reaching $20,000–$50,000 per day. "
-            "Conversely, <b>false positives (false alarms)</b> merely trigger modest proactive dispatcher review.",
+            "<b>Quantitative Expected-Cost Model:</b> Standard models default to an unadjusted 0.50 cutoff. In marine terminal operations, "
+            "<b>false negatives (unpredicted delays)</b> incur severe cascading costs (estimated at ~$25,000–$50,000 per window "
+            "from vessel idling, demurrage, and intermodal train/truck disruption), whereas <b>false alarms</b> merely trigger "
+            "modest dispatcher review (~$2,500–$5,000). "
+            "Modeling total expected loss as <i>Loss = FN &times; R + FP &times; 1</i> (where <i>R = C<sub>delay</sub> / C<sub>alarm</sub></i>), "
+            "threshold 0.40 minimizes expected cost whenever missed delays are at least 6&times; costlier than false alarms (<i>R &ge; 5.9</i>). "
+            "At an 8:1 ratio, threshold 0.40 yields 264 cost units (22&times;8 + 88), outperforming threshold 0.50 (281 units; +6.4% cost) "
+            "and threshold 0.55 (335 units; +26.9% cost).",
             body_style,
         )
     )
     story.append(
         Paragraph(
-            "Validation threshold sweeping across 0.20 to 0.60 revealed clear operational trade-offs: While threshold 0.55 maximizes validation F1 (0.5676), "
-            "it misses nearly half of delayed cases (46.2% false negative rate). In contrast, <b>threshold 0.40</b> was selected as the operational baseline "
-            "because it achieves <b>71.79% recall on validation</b> while maintaining acceptable precision (37.84%). "
-            "On the held-out test set, threshold 0.40 successfully detected <b>31 of 53 delays</b> (58.49% recall), "
-            "compared to only 23 delays caught at 0.50 and 14 delays caught at 0.55.",
+            "<b>Operational Judgment & Sample Uncertainty:</b> Rather than applying automated loss optimization over synthetic data, "
+            "threshold 0.40 was chosen by <b>operational judgment</b> on validation data (71.79% recall, 28/39 delays caught; 37.84% precision) "
+            "to establish an early-warning buffer. On the held-out test set, it caught 31 of 53 delays (58.49% recall, 95% bootstrap CI: [44.7%, 72.1%]) "
+            "with ROC-AUC = 0.736 (95% CI: [0.650, 0.811]). The test delay rate (10.6% vs. 15.6% validation) reflects temporal seasonality, "
+            "highlighting that point estimates on 53 positive cases carry measurable sampling uncertainty.",
             body_style,
         )
     )
@@ -697,7 +713,7 @@ def build_pdf():
             body_style,
         )
     )
-    story.append(Paragraph("• <b>Global Feature Weights:</b> Mean Decrease in Impurity (MDI) across all 100 trees identifies the primary factors governing model sensitivity: <code>queue_length</code> (0.2423), <code>historical_avg_delay_hours</code> (0.2064), and <code>arrival_load_ratio</code> (0.1603) explain over 60% of total variance, followed by <code>vessel_arrivals_6h</code> (0.0792) and <code>effective_capacity_6h</code> (0.0773).", bullet_style))
+    story.append(Paragraph("• <b>Global Feature Weights:</b> Mean Decrease in Impurity (MDI) across all 100 trees identifies the primary split features: <code>queue_length</code> (0.2423), <code>historical_avg_delay_hours</code> (0.2064), and <code>arrival_load_ratio</code> (0.1603) account for over 60% of total split impurity reduction, followed by <code>vessel_arrivals_6h</code> (0.0792) and <code>effective_capacity_6h</code> (0.0773). MDI measures tree split frequency and gini gain, which naturally favors continuous and high-cardinality numerical variables over low-cardinality categoricals; a permutation importance cross-check on held-out data is recommended to corroborate these relative rankings.", bullet_style))
     story.append(Paragraph("• <b>Observed vs. Baseline Context:</b> For any given prediction, the system contrasts the user's observation against empirical training benchmarks (e.g., Queue: 8 vs. 1.04 baseline; Load Ratio: 1.33 vs. 0.74 baseline). This explains <i>operational pressure</i> without fabricating local attribution scores (such as ad-hoc SHAP approximations).", bullet_style))
     story.append(Paragraph("• <b>Governance Disclaimer:</b> The interface enforces an explicit non-causal notice: factors reflect historical statistical associations, not proven physical causation.", bullet_style))
 
@@ -723,10 +739,10 @@ def build_pdf():
             body_style,
         )
     )
-    story.append(Paragraph("• <b>Zero Retraining:</b> The app caches the pre-trained pipeline via <code>@st.cache_resource</code>, ensuring instant inference (&lt;50ms) with zero model modification.", bullet_style))
+    story.append(Paragraph("• <b>Model Risk Score Output:</b> Evaluates inputs against the pipeline and outputs a continuous model risk score (predicted delay probability) alongside clear classification flags at threshold 0.40.", bullet_style))
+    story.append(Paragraph("• <b>Zero Retraining:</b> The app caches the pre-trained pipeline via <code>@st.cache_resource</code>, ensuring instant inference (&lt;50ms) with zero runtime model modification.", bullet_style))
     story.append(Paragraph("• <b>Automated Safe Math:</b> Automatically computes <code>arrival_load_ratio = arrivals / capacity</code>. If capacity is set to 0, it renders a validation warning and safely disables prediction, preventing division-by-zero crashes.", bullet_style))
     story.append(Paragraph("• <b>Synchronized Temporal Framing:</b> Weekday is automatically derived from the selected observation date (e.g. <code>obs_date.strftime('%A')</code>), and exact datetime arithmetic advances midnight boundaries into the next day.", bullet_style))
-    story.append(Paragraph("• <b>Preset Operational Scenarios:</b> Features pre-loaded scenarios (<i>Normal Operations</i>, <i>Elevated Delay Risk</i>, <i>Borderline</i>) for immediate testing.", bullet_style))
 
     # Section 9: Limitations
     story.append(Paragraph("9. System Limitations & Future Technical Horizons", h1_style))
@@ -736,7 +752,7 @@ def build_pdf():
             body_style,
         )
     )
-    story.append(Paragraph("• <b>Uncalibrated Probabilities:</b> Random Forest predicted probabilities represent ensemble tree voting fractions. While monotonic with empirical risk, they have not undergone isotonic or Platt probability calibration.", bullet_style))
+    story.append(Paragraph("• <b>Model Risk Score vs. Calibrated Confidence:</b> The model outputs a continuous risk score derived from ensemble tree vote fractions. While monotonic with empirical risk, these fractions are not formally calibrated probabilities. Adding <code>CalibratedClassifierCV</code> (isotonic regression or Platt scaling fit on validation predictions) represents a low-overhead enhancement to map voting shares directly into calibrated operational confidence intervals.", bullet_style))
     story.append(Paragraph("• <b>Synthetic Domain Gap:</b> The simulator abstracts away real-world complexities such as live AIS ship telemetry, tugboat availability, multi-crane outages, pilotage bottlenecks, and labor contract disputes.", bullet_style))
     story.append(Paragraph("• <b>Single-Step Horizon:</b> The model forecasts the immediate next 6-hour window. Multi-interval compounding delays over 24–48 hours will require autoregressive sequential architectures (e.g., Temporal Fusion Transformers).", bullet_style))
 
@@ -744,9 +760,10 @@ def build_pdf():
     summary_box = [
         [
             Paragraph(
-                "<b>Conclusion & Internship Readiness:</b> The forecasting pipeline is reproducible, fully tested (17/17 automated tests passing), "
-                "defensible in design, and backed by a responsive Streamlit dashboard. All code, data pipelines, and documentation adhere strictly "
-                "to industry best practices in temporal machine learning governance.",
+                "<b>Summary:</b> This forecasting system implements chronological data partitioning, baseline benchmarks, "
+                "and operational threshold evaluation for 6-hour port delay early warning. The pipeline pairs reproducible "
+                "model training with an interactive Streamlit dashboard, comprehensive automated test coverage (17/17 passed), "
+                "and explicit documentation of model limitations and evaluation uncertainties.",
                 callout_style,
             )
         ]
@@ -756,7 +773,7 @@ def build_pdf():
         TableStyle([
             ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#F0F8F5")),
             ("BOX", (0, 0), (-1, -1), 0.75, colors.HexColor("#2E7D32")),
-            ("PADDING", (0, 0), (-1, -1), 4.5),
+            ("PADDING", (0, 0), (-1, -1), 4.0),
         ])
     )
     story.append(Spacer(1, 3))
